@@ -11,7 +11,10 @@
   "dependencies": {
     "@clerk/nextjs": "^4.29.7",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "@radix-ui/react-slot": "^1.0.2",
+=======
+>>>>>>> 4464c151acf60f6e2494b9bea88ad9aa4a2398b7
 =======
 >>>>>>> 4464c151acf60f6e2494b9bea88ad9aa4a2398b7
     "class-variance-authority": "^0.7.0",
