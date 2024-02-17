@@ -10,7 +10,10 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.7",
+<<<<<<< HEAD
     "@radix-ui/react-slot": "^1.0.2",
+=======
+>>>>>>> 4464c151acf60f6e2494b9bea88ad9aa4a2398b7
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "lucide-react": "^0.331.0",
