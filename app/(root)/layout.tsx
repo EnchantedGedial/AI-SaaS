@@ -9,6 +9,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <MobileNav/>
       <div className="root-container">
         <div className="wrapper">
+
+          hi fucking 
           {children}
         </div>
       </div>
