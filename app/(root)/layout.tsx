@@ -10,7 +10,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <div className="root-container">
         <div className="wrapper">
 
-          hi fucking 
+          hi fucking all
           {children}
         </div>
       </div>
