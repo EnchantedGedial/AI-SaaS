@@ -12,6 +12,7 @@ export async function createUser(user: CreateUserParams) {
     await connectToDatabase();
 
     const newUser = await User.create(user);
+    if(newUser) console.log('db connerted');
 
     return JSON.parse(JSON.stringify(newUser));
   } catch (error) {
