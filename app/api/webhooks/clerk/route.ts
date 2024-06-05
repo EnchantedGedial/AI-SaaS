@@ -66,10 +66,10 @@ export async function POST(req: Request) {
     const user = {
       clerkId: id,
       email: email_addresses[0].email_address,
-      username: username!,
-      firstName: first_name,
-      lastName: last_name,
-      photo: image_url,
+      username: username || '', // Handle null case by assigning an empty string
+      firstName: first_name || '', // Handle null case by assigning an empty string
+      lastName: last_name || '', // Handle null case by assigning an empty string
+      photo: image_url || '', // Handle null case by assigning an empty string
     };
 
     const newUser = await createUser(user);
@@ -91,10 +91,10 @@ export async function POST(req: Request) {
     const { id, image_url, first_name, last_name, username } = evt.data;
 
     const user = {
-      firstName: first_name,
-      lastName: last_name,
-      username: username!,
-      photo: image_url,
+      firstName: first_name || '', // Handle null case by assigning an empty string
+      lastName: last_name || '', // Handle null case by assigning an empty string
+      username: username || '', // Handle null case by assigning an empty string
+      photo: image_url || '', // Handle null case by assigning an empty string
     };
 
     const updatedUser = await updateUser(id, user);
