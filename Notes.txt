@@ -1,0 +1,10 @@
+Video : https://www.youtube.com/watch?v=Ahwoks_dawU&ab_channel=JavaScriptMastery
+
+1:07:59 -- Talks about how to cash nad defference b/w connecting db in express and nextjs
+
+
+1:21:06 -- Server Actions
+
+
+1:29:23 -- WebHooks-->used to sinc user data form clerck to Database 
+            what re web WebHooks

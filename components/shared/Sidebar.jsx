@@ -1,3 +1,4 @@
+
 "use client"
 
 import { navLinks } from '@/constants'
@@ -6,6 +7,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Button } from '../ui/button'
+
 
 const Sidebar = () => {
   const pathname = usePathname();
@@ -18,9 +20,11 @@ const Sidebar = () => {
         </Link>
 
         <nav className="sidebar-nav">
+
+         {/* Only Render this if user is signed in */}  
           <SignedIn>
             <ul className="sidebar-nav_elements">
-              {navLinks.slice(0, 6).map((link) => {
+              {navLinks.slice(0,6).map((link) => {
                 const isActive = link.route === pathname
 
                 return (
@@ -42,8 +46,7 @@ const Sidebar = () => {
               })}
               </ul>
 
-
-            <ul className="sidebar-nav_elements">
+              <ul className='sidebar-nav_elements'>
               {navLinks.slice(6).map((link) => {
                 const isActive = link.route === pathname
 
@@ -64,18 +67,20 @@ const Sidebar = () => {
                   </li>
                 )
               })}
-
               <li className="flex-center cursor-pointer gap-2 p-4">
                 <UserButton afterSignOutUrl='/' showName />
               </li>
             </ul>
           </SignedIn>
 
-          <SignedOut>
-            <Button asChild className="button bg-purple-gradient bg-cover">
-              <Link href="/sign-in">Login</Link>
-            </Button>
-          </SignedOut>
+         {/* if user is not signed in reder this*/}
+            <SignedOut>
+                {/* Shad cn Component */}
+                <Button asChild className='bg-purple-gradient bg-cover'>
+                    <Link href='/sign-in'>Log In</Link>
+                </Button>
+            </SignedOut>   
+        
         </nav>
       </div>
     </aside>
