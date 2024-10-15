@@ -1,7 +1,7 @@
 
 "use client"
 
-import { navLinks } from '@/constants'
+import { navLinks } from '../../constants/index'
 import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 import Image from 'next/image'
 import Link from 'next/link'
