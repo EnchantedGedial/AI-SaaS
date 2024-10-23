@@ -8,3 +8,12 @@ Video : https://www.youtube.com/watch?v=Ahwoks_dawU&ab_channel=JavaScriptMastery
 
 1:29:23 -- WebHooks-->used to sinc user data form clerck to Database 
             what re web WebHooks
+
+
+
+Cloudinary Data
+Api key :152983569262674
+Cloud name	dypcqleig
+API secret LDpgPBb_W4N5kFOnHBB7CX8E61s
+API environment variable	
+CLOUDINARY_URL=cloudinary://152983569262674:LDpgPBb_W4N5kFOnHBB7CX8E61s@dypcqleig
