@@ -7,6 +7,7 @@ import { aspectRatioOptions, defaultValues, transformationTypes } from '../../co
 import CustomField from '../shared/CustomField.jsx'
 import debounce from "../../lib/utils.js"
 import deepMergeObjects from "../../lib/utils.js"
+import updateCredits from "../../lib/actions/user.action.js"
 
 import { Button } from "../ui/button";
 import {
@@ -28,6 +29,7 @@ import {
 
 import { Input } from "../ui/input";
 import MediaUploader from './MediaUploader.jsx';
+import TransformedImage from './TransformedImage.jsx';
 
 // Define the form schema using Zod
 export const formSchema = z.object({
@@ -120,7 +122,7 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
     setNewTransformation(null);
 
     startTransition(async () => {
-      // await updateCredits(userId, creditFee);
+      await updateCredits(userId, creditFee);
     });
   };
 
@@ -232,15 +234,16 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
                 type: type,
               }),
           })}
+          
 
-          {/* {TransformedImage({
+          {TransformedImage({
             image: image,
             type: type,
             title: form.getValues().title,
             isTransforming: isTransforming,
             setIsTransforming: setIsTransforming,
             transformationConfig: transformationConfig,
-          })} */}
+          })}
         </div>
 
 
