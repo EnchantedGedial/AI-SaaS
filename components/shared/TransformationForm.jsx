@@ -3,11 +3,12 @@ import React, { useState, useTransition } from 'react';
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { aspectRatioOptions, defaultValues, transformationTypes } from '../../constants/index.js'
+import { aspectRatioOptions, defaultValues, transformationTypes,creditFee } from '../../constants/index.js'
 import CustomField from '../shared/CustomField.jsx'
 import debounce from "../../lib/utils.js"
-import deepMergeObjects from "../../lib/utils.js"
-import updateCredits from "../../lib/actions/user.action.js"
+// import deepMergeObjects from "../../lib/utils.js"
+import { deepMergeObjects } from '../../lib/utils.js';
+import {updateCredits} from "../../lib/actions/user.action.js"
 
 import { Button } from "../ui/button";
 import {
@@ -30,6 +31,7 @@ import {
 import { Input } from "../ui/input";
 import MediaUploader from './MediaUploader.jsx';
 import TransformedImage from './TransformedImage.jsx';
+import { useRouter } from "next/navigation"
 
 // Define the form schema using Zod
 export const formSchema = z.object({
@@ -48,7 +50,7 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
   const [transformationConfig, setTransformationConfig] = useState(config)
 
   const [isPending, startTransition] = useTransition()
-
+  const router = useRouter()
 
   const initialValues = data && action === 'Update' ? {
     title: data?.title,
@@ -69,21 +71,72 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
   // Handle form submission
-  const onSubmit = async (values) => {
-    setIsSubmitting(true);
-    setSubmitError(null);
-    setSubmitSuccess(false);
-    try {
-      // Replace this with your actual submission logic
-      await fakeApiCall(values);
-      setSubmitSuccess(true);
-      console.log("Form submitted successfully:", values);
-    } catch (error) {
-      setSubmitError("Failed to submit the form. Please try again.");
-    } finally {
-      setIsSubmitting(false);
+  async function onSubmit(values) {
+    setIsSubmitting(true)
+  
+    if (data || image) {
+      const transformationUrl = getCldImageUrl({
+        width: image?.width,
+        height: image?.height,
+        src: image?.publicId,
+        ...transformationConfig
+      })
+  
+      const imageData = {
+        title: values.title,
+        publicId: image?.publicId,
+        transformationType: type,
+        width: image?.width,
+        height: image?.height,
+        config: transformationConfig,
+        secureURL: image?.secureURL,
+        transformationURL: transformationUrl,
+        aspectRatio: values.aspectRatio,
+        prompt: values.prompt,
+        color: values.color
+      }
+  
+      if (action === "Add") {
+        try {
+          const newImage = await addImage({
+            image: imageData,
+            userId,
+            path: "/"
+          })
+  
+          if (newImage) {
+            form.reset()
+            setImage(data)
+            router.push(`/transformations/${newImage._id}`)
+          }
+        } catch (error) {
+          console.log(error)
+        }
+      }
+  
+      if (action === "Update") {
+        try {
+          const updatedImage = await updatedImage({
+            image: {
+              ...imageData,
+              _id: data._id
+            },
+            userId,
+            path: `/transformations/${data._id}`
+          })
+  
+          if (updatedImage) {
+            router.push(`/transformations/${updatedImage._id}`)
+          }
+        } catch (error) {
+          console.log(error)
+        }
+      }
     }
-  };
+  
+    setIsSubmitting(false)
+  }
+  
 
   const onSelectFieldHandler = (value, onChangeField) => {
     const imageSize = aspectRatioOptions[value];
@@ -115,16 +168,19 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
   };
 
   const onTransformHandler = async () => {
-    setIsTransforming(true);
-
-    setTransformationConfig(deepMergeObjects(newTransformation, transformationConfig));
-
-    setNewTransformation(null);
-
+    setIsTransforming(true)
+  
+    setTransformationConfig(
+      deepMergeObjects(newTransformation, transformationConfig)
+    )
+  
+    setNewTransformation(null)
+  
     startTransition(async () => {
-      await updateCredits(userId, creditFee);
-    });
-  };
+      await updateCredits(userId, creditFee)
+    })
+  }
+  
 
 
 
