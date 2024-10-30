@@ -1,14 +1,16 @@
 "use client";
-import React, { useState, useTransition } from 'react';
+import React, { useState, useTransition ,useEffect} from 'react';
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { aspectRatioOptions, defaultValues, transformationTypes,creditFee } from '../../constants/index.js'
 import CustomField from '../shared/CustomField.jsx'
-import debounce from "../../lib/utils.js"
-// import deepMergeObjects from "../../lib/utils.js"
+import {debounce} from "../../lib/utils.js"
+import { getCldImageUrl } from "next-cloudinary"
 import { deepMergeObjects } from '../../lib/utils.js';
 import {updateCredits} from "../../lib/actions/user.action.js"
+import { addImage, updateImage } from "../../lib/actions/image.actions.js"
+import { useToast } from "../../hooks/use-toast";
 
 import { Button } from "../ui/button";
 import {
@@ -32,6 +34,7 @@ import { Input } from "../ui/input";
 import MediaUploader from './MediaUploader.jsx';
 import TransformedImage from './TransformedImage.jsx';
 import { useRouter } from "next/navigation"
+import { InsufficientCreditsModal } from './InsufficientCreditsModal.jsx';
 
 // Define the form schema using Zod
 export const formSchema = z.object({
@@ -43,7 +46,7 @@ export const formSchema = z.object({
 });
 
 const TransformationForm = ({ action, data = null, userId, type, creditBalance, config = null }) => {
-  const TransformationType = transformationTypes[type];
+  const transformationType = transformationTypes[type];
   const [image, setImage] = useState(data);
   const [newTransformation, setNewTransformation] = useState(null);
   const [isTransforming, setIsTransforming] = useState(false)
@@ -102,11 +105,19 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
             image: imageData,
             userId,
             path: "/"
+
           })
   
           if (newImage) {
             form.reset()
             setImage(data)
+            console.log(data);
+            // toast({
+            //   title: "Image Saved successfully",
+            //   // description: "1 credit was deducted from your account",
+            //   duration: 5000,
+            //   className: "success-toast",
+            // });
             router.push(`/transformations/${newImage._id}`)
           }
         } catch (error) {
@@ -148,7 +159,7 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
       height: imageSize.height,
     }));
 
-    setNewTransformation(TransformationType.config);
+    setNewTransformation(transformationType.config);
 
     return onChangeField(value);
   };
@@ -181,7 +192,12 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
     })
   }
   
-
+  useEffect(() => {
+    if (image && (type === "restore" || type === "removeBackground")) {
+      setNewTransformation(transformationType.config)
+    }
+  }, [image, transformationType.config, type])
+  
 
 
 
@@ -189,7 +205,7 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
 
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-
+{creditBalance<Math.abs(creditFee) && <InsufficientCreditsModal/>}
         <CustomField
 
           control={form.control}
